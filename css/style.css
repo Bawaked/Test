@@ -1,0 +1,356 @@
+:root {
+  --color-bg: #100A05;
+  --color-bg-2: #1E1108;
+  --color-text: #F2E4C6;
+  --color-text-secondary: #B79E74;
+  --color-accent: #CD9F4E;
+  --color-accent-rgb: 205, 159, 78;
+  --color-accent-light: #F1D998;
+  --color-accent-deep: #8A6A2E;
+  --color-surface-rgb: 30, 17, 8;
+  --color-pill-border: rgba(205, 159, 78, 0.45);
+  --font-en: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  --radius-pill: 16px;
+  --radius-btn: 999px;
+  --radius-avatar: 22px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background: var(--color-bg);
+}
+
+body {
+  min-height: 100vh;
+  font-family: var(--font-en);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* خلفية خشب العود الفاخر: قاعدة داكنة كثيفة قريبة من الأسود + عروق كهرمانية/ذهبية
+   ناعمة ومتدفقة (SVG turbulence + displacement)، مع طبقة لمعان خفيفة أعلى البطاقة
+   تحاكي انعكاس الضوء على الخشب المصقول، بدل خطوط تكرارية "رخيصة". */
+.glow-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: radial-gradient(160% 90% at 30% 0%, #241407 0%, var(--color-bg) 45%, #0A0603 100%);
+}
+.glow-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('../images/wood.svg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  mix-blend-mode: soft-light;
+  opacity: 0.55;
+}
+.glow-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(90% 55% at 50% -8%, rgba(var(--color-accent-rgb), 0.16), transparent 62%),
+    radial-gradient(120% 70% at 100% 110%, rgba(0,0,0,0.55), transparent 60%),
+    radial-gradient(120% 70% at 0% 110%, rgba(0,0,0,0.4), transparent 60%);
+}
+.glow-bg span {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+}
+.glow-bg .glow-1 {
+  width: 60vmax; height: 60vmax;
+  top: -26vmax; right: -20vmax;
+  background: radial-gradient(circle, rgba(var(--color-accent-rgb), 0.20), transparent 70%);
+}
+.glow-bg .glow-2 {
+  width: 50vmax; height: 50vmax;
+  bottom: -22vmax; left: -18vmax;
+  background: radial-gradient(circle, rgba(var(--color-accent-rgb), 0.12), transparent 70%);
+}
+.glow-bg .glow-3 { display: none; }
+
+/* إطار ذهبي عريض يحيط بكامل البطاقة، بزخارف في الزوايا الأربع */
+.frame {
+  position: fixed;
+  inset: 10px;
+  z-index: 2;
+  pointer-events: none;
+  border: 3px solid transparent;
+  border-image: linear-gradient(135deg, var(--color-accent-light), var(--color-accent) 45%, var(--color-accent-deep) 100%) 1;
+  box-shadow:
+    inset 0 0 0 1px rgba(var(--color-accent-rgb), 0.25),
+    0 0 30px rgba(0,0,0,0.55);
+}
+.frame-corner {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  background-image: url('../images/corner.svg');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  opacity: 0.95;
+}
+.frame-corner--tl { top: -3px; left: -3px; }
+.frame-corner--tr { top: -3px; right: -3px; transform: scaleX(-1); }
+.frame-corner--bl { bottom: -3px; left: -3px; transform: scaleY(-1); }
+.frame-corner--br { bottom: -3px; right: -3px; transform: scale(-1, -1); }
+
+.card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 460px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 54px 30px 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+.card__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 34px;
+  flex-shrink: 0;
+}
+
+.card__intro { flex: 1; min-width: 0; }
+
+.card__actions {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 0;
+}
+
+.name {
+  margin: 0;
+  font-family: var(--font-en);
+  font-size: 2.55rem;
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: 0.01em;
+}
+html[lang="ar"] .name {
+  font-family: 'Marcellus SC', 'Cairo', serif;
+  font-weight: 800;
+  font-size: 2.15rem;
+}
+.name__first, .name__last {
+  display: block;
+  color: var(--color-text);
+}
+.name--accent {
+  color: var(--color-accent-light);
+  text-shadow: 0 0 18px rgba(var(--color-accent-rgb), 0.35);
+}
+
+.job-title {
+  margin: 10px 0 0;
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+}
+
+.divider {
+  width: 52px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-accent-light), var(--color-accent-deep));
+  border-radius: 2px;
+  margin: 22px 0 0;
+  display: block;
+}
+
+.avatar-wrapper {
+  flex-shrink: 0;
+  width: 122px;
+  height: 122px;
+  border-radius: var(--radius-avatar);
+  border: 4px solid var(--color-accent);
+  outline: 1px solid var(--color-accent-deep);
+  outline-offset: 3px;
+  box-shadow:
+    0 0 0 1px rgba(var(--color-accent-rgb), 0.4),
+    0 10px 24px rgba(0,0,0,0.55),
+    0 0 24px rgba(var(--color-accent-rgb), 0.25);
+  overflow: hidden;
+  background: #2B1B10;
+}
+.avatar-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: saturate(0.95) contrast(1.03);
+}
+
+.social-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 2px 4px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 372px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+.social-list::-webkit-scrollbar { width: 4px; }
+.social-list::-webkit-scrollbar-thumb {
+  background: rgba(var(--color-accent-rgb), 0.35);
+  border-radius: 4px;
+}
+
+/* أزرار بارزة (embossed) بنفس مادة/لون الخلفية، بحدود ذهبية رفيعة
+   وظل غائر+بارز يعطي إحساس النقش على الجلد/الخشب الغامق */
+.social-pill {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 16px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(160deg, rgba(var(--color-surface-rgb), 0.9), rgba(var(--color-surface-rgb), 0.6));
+  border: 1px solid var(--color-pill-border);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.04) inset,
+    0 -1px 0 rgba(0,0,0,0.4) inset,
+    0 6px 14px rgba(0,0,0,0.35);
+  text-decoration: none;
+  color: var(--color-text);
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+.social-pill:hover {
+  border-color: var(--color-accent);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.06) inset,
+    0 -1px 0 rgba(0,0,0,0.4) inset,
+    0 8px 18px rgba(0,0,0,0.4),
+    0 0 16px rgba(var(--color-accent-rgb), 0.25);
+}
+.social-pill:active { transform: scale(0.98); }
+
+.social-pill__icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--color-accent-light);
+  background: radial-gradient(circle at 35% 30%, rgba(var(--color-accent-rgb), 0.22), rgba(var(--color-surface-rgb), 0.95) 70%);
+  border: 1.5px solid var(--color-accent);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.08) inset,
+    0 -2px 3px rgba(0,0,0,0.5) inset,
+    0 2px 5px rgba(0,0,0,0.4);
+}
+.social-pill__icon svg { width: 17px; height: 17px; }
+
+.social-pill__label {
+  flex: 1;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.social-pill__chevron {
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
+}
+html[dir="rtl"] .social-pill__chevron {
+  transform: scaleX(-1);
+}
+
+html[lang="ar"] body {
+  font-family: 'Cairo', -apple-system, 'Segoe UI', Tahoma, Arial, sans-serif;
+}
+
+.btn-save {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 17px;
+  border: 1px solid var(--color-accent-light);
+  border-radius: var(--radius-btn);
+  background: linear-gradient(160deg, var(--color-accent-light), var(--color-accent) 55%, var(--color-accent-deep) 100%);
+  color: #241505;
+  font-family: inherit;
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.5) inset,
+    0 10px 22px rgba(0,0,0,0.45),
+    0 0 22px rgba(var(--color-accent-rgb), 0.3);
+  text-decoration: none;
+}
+.btn-save svg { width: 20px; height: 20px; }
+
+.lang-switch {
+  display: flex;
+  justify-content: center;
+  margin-top: 26px;
+}
+.lang-switch a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  border-radius: var(--radius-btn);
+  border: 1px solid var(--color-pill-border);
+  background: rgba(var(--color-surface-rgb), 0.5);
+  color: var(--color-text-secondary);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+.lang-switch a:hover { color: var(--color-accent-light); border-color: var(--color-accent); }
+
+.copy-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(12px);
+  background: #241609;
+  color: var(--color-text);
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  z-index: 5;
+  border: 1px solid var(--color-pill-border);
+}
+.copy-toast--visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+@media (max-width: 380px) {
+  .name { font-size: 2.1rem; }
+  html[lang="ar"] .name { font-size: 1.85rem; }
+  .avatar-wrapper { width: 100px; height: 100px; }
+  .frame { inset: 7px; }
+}

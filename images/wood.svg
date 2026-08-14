@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1800">
+  <defs>
+    <!-- خشب العود: قاعدة داكنة كثيفة قريبة من الأسود مع عروق ذهبية/كهرمانية متدفقة وناعمة -->
+    <filter id="oud" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.0016 0.012" numOctaves="2" seed="21" result="warp"/>
+      <feDisplacementMap in="SourceGraphic" in2="warp" scale="140" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
+
+      <feTurbulence type="fractalNoise" baseFrequency="0.0007 0.055" numOctaves="5" seed="9" result="grain"/>
+      <feComponentTransfer in="grain" result="grainSharp">
+        <feFuncA type="gamma" amplitude="1" exponent="2.4" offset="0"/>
+      </feComponentTransfer>
+      <feDisplacementMap in="grainSharp" in2="warp" scale="60" xChannelSelector="R" yChannelSelector="G" result="grainFlow"/>
+
+      <feColorMatrix in="grainFlow" type="matrix"
+        values="0 0 0 0 0.62
+                0 0 0 0 0.42
+                0 0 0 0 0.16
+                0 0 0 0.85 0" result="grainWarm"/>
+
+      <feGaussianBlur in="grainWarm" stdDeviation="0.6" result="grainSmooth"/>
+
+      <feTurbulence type="fractalNoise" baseFrequency="0.02 0.02" numOctaves="2" seed="33" result="pores"/>
+      <feColorMatrix in="pores" type="matrix"
+        values="0 0 0 0 0
+                0 0 0 0 0
+                0 0 0 0 0
+                0 0 0 0.10 0" result="poresDark"/>
+
+      <feMerge>
+        <feMergeNode in="grainSmooth"/>
+        <feMergeNode in="poresDark"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="900" height="1800" fill="#1B0F06"/>
+  <rect width="900" height="1800" filter="url(#oud)"/>
+</svg>
